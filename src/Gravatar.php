@@ -126,9 +126,12 @@ final class Gravatar
      */
     private function createEmailHash(string $email): string
     {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new \InvalidArgumentException('Invalid email address');
-        }
+		$validator = \Illuminate\Support\Facades\Validator::make(['email'=>$email], [
+			'email' => 'required|email',
+		]);
+
+		if ($validator->fails())
+			throw new \InvalidArgumentException('Invalid email address');
 
         return md5(strtolower(trim($email)));
     }
